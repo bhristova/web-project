@@ -1,0 +1,32 @@
+<html>
+    <head>
+        <meta name='viewport' content='width=device-width, initial-scale=1.0' charset='utf-8' Content-Type: text/html;>
+
+        <link rel='stylesheet' href='editor.css'>  
+        <link rel='stylesheet' href='common.css'>  
+
+        <script type='module' src='./scripts/editor.js' ></script>
+        
+        <title>Текстов редактор + анотатор на ресурси</title>
+    </head>
+    <body>
+        <div class='topBar' id='topBar'></div>
+
+        <div id='sidebar' class='sidebar'>
+                <button type='button' id='button-backToProjects' class='sidebarButton'>Към начална страница</button>
+                <button type='button' id='button-addCitation' class='sidebarButton'>Управление на цитати...</button>
+		</div>
+
+        <form class='form' method='put' >
+            <input name='name' id='projectName' class='projectName'></h3>
+            <textarea name='content' id='projectContent' name='w3review' rows='4' cols='50' class='textarea'>
+            </textarea>
+            <br><br>
+            <button type='button' class='projectSave' id='projectSaveButton' class='sidebarButton'>Запазване</button>
+        </form>
+
+
+    </body>
+
+
+</html>

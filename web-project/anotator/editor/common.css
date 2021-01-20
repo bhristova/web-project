@@ -1,0 +1,75 @@
+
+.deleteButton {
+    display: flex;
+    position: relative;
+    background-color: #f8a6a6;
+    height: 30px;
+    align-self: center;
+    border-style: none;
+    cursor: pointer;
+    margin: 5px;
+    align-items: center;
+    font-size: 14px;
+    border-radius: 2px;
+    box-shadow: 0px 2px 0px #b47171;
+}
+
+.deleteButton:hover {
+    color:  rgb(233, 233, 233);
+    background-color: #fd4e4e;
+    box-shadow: 0px 2px 0px #a82424;
+}
+
+.errorMessage {
+    z-index: 11;
+    position: absolute;
+    background-color: #f8a6a6;
+    height: 100px;
+    width: 300px;
+    border-radius: 2px;
+    box-shadow: 0 2px 1px #b47171;
+    text-align: center;
+    bottom: 10;
+    right: 10;
+    font-family: Bahnschrift;
+}
+
+.successMessage {
+    z-index: 10;
+    position: absolute;
+    background-color: #a5d8bb;
+    height: 100px;
+    width: 300px;
+    border-radius: 2px;
+    box-shadow: 0 2px 1px #8ab89d;
+    text-align: center;
+    bottom: 10;
+    right: 10;
+    font-family: Bahnschrift;
+}
+
+#error-message, #success-message {
+    -moz-animation: cssAnimation 0s ease-in 5s forwards;
+    /* Firefox */
+    -webkit-animation: cssAnimation 0s ease-in 5s forwards;
+    /* Safari and Chrome */
+    -o-animation: cssAnimation 0s ease-in 5s forwards;
+    /* Opera */
+    animation: cssAnimation 0s ease-in 5s forwards;
+    -webkit-animation-fill-mode: forwards;
+    animation-fill-mode: forwards;
+}
+@keyframes cssAnimation {
+    to {
+        width:0;
+        height:0;
+        overflow:hidden;
+    }
+}
+@-webkit-keyframes cssAnimation {
+    to {
+        width:0;
+        height:0;
+        visibility:hidden;
+    }
+}

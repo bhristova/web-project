@@ -1,0 +1,79 @@
+body {
+    background-color: rgb(233, 233, 233);
+    font-family: Bahnschrift;
+}
+
+.toolbar {
+    position: fixed;
+    z-index: 1;
+    height: 120px;
+    width: 100%;
+    top: 0;
+	left: 0;
+    background-color: white;
+}
+
+.toolbar .header {
+    font-size: 30px;
+    text-align: center;
+}
+
+.buttons {
+    margin-top: 200px;
+    display: grid;
+    background-color: white;
+    height: 400px;
+    width: 30%;
+    justify-content: center;
+    margin-left: 35%;
+}
+
+.projectDataContainer {
+    position: relative;
+}
+
+.imageButtons {
+    margin: 10px 10px 10px 10px;
+}
+
+.imageButtons .imageButton {
+    cursor: pointer;
+}
+
+.multifield {
+    background-color: #f9f9f9;
+    box-shadow: 0px 0px 5px gray;
+    border-radius: 3px;
+    overflow-y: scroll;
+    height: 250px;
+    position: relative;
+}
+
+.multifield .projectName {
+    display: grid;
+    cursor: pointer;
+}
+
+.multifield .projectName:hover {
+    background-color: #cfd2d1;
+    transition: 0.3s;
+    color: white;
+}
+
+.newForm {
+    display: grid;
+    position: relative;
+    padding: 5px 5px 5px 5px;
+}
+
+.newForm .field {
+    margin: 5px 5px 5px 5px;
+}
+
+.projectContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 0 0 0 5px;
+    height: 50px;
+}

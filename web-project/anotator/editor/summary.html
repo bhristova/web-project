@@ -1,0 +1,33 @@
+<html>
+    <head>
+        <meta name='viewport' content='width=device-width, initial-scale=1.0' charset='utf-8' Content-Type: text/html;>
+
+        <link rel='stylesheet' href='summary.css'>  
+
+        <script type='module' src='./scripts/summary.js' ></script>
+
+        <title>Текстов редактор + анотатор на ресурси</title>
+    </head>
+    <body>
+        <div class='mainContainer'>
+                <button type='button' id='button-backToProjects' class='backToProjects'>Към начална страница</button>
+                <div id='citations' class='citationsContainer'>
+                <p class='header'>Използвани цитати</p>
+                <div id='citationsContainer' >
+                    <table id='citations-table'>
+                        <th>Цитат</th>
+                        <th>Автор</th>
+                        <th>Източник</th>
+                    </table>
+                </div>
+            </div>
+            <div id='statistics'  class='statistics'>
+                <p class='header'>Статистика на видовете използвани ресурси</p>
+                <div id='statisticsContainer' class='statisticsContainer'>
+                    <div class='graph' id='graph'></div>
+                </div>
+            </div>
+        </div>
+    </body>
+
+</html>
