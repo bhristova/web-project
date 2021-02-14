@@ -4,16 +4,22 @@ import errorMessage from './error-message.js';
 import successMessage from './success-message.js';
 import {onExistingCitationClick} from './sidebar.js';
 
-const beforeSubmitExportForm = (evt, id, formId) => {
+const beforeSubmitExportForm = (evt, type, id, formId) => {
     evt.preventDefault();
     const form = document.getElementById(formId);
 
-    const projectId = document.createElement('input');//prepare a new input DOM element
-    projectId.setAttribute('name', 'projectId');//set the param name
-    projectId.setAttribute('value', id);//set the value
-    projectId.setAttribute('type', 'hidden')//set the type, like "hidden" or other
+    const projectId = document.createElement('input');
+    projectId.setAttribute('name', 'projectId');
+    projectId.setAttribute('value', id);
+    projectId.setAttribute('type', 'hidden');
+
+    const typeElem = document.createElement('input');
+    typeElem.setAttribute('name', 'exportType');
+    typeElem.setAttribute('value', type);
+    typeElem.setAttribute('type', 'hidden');
 
     form.appendChild(projectId);
+    form.appendChild(typeElem);
 
     form.submit();
 };
@@ -41,13 +47,13 @@ const beforeSubmitImportForm = async (evt, id, annotationType) => {
     }
 };
 
-const createExportButton = (projectId) => {
-    const exportCitationsDiv = document.getElementById('div-exportCitations');
+const createExportButton = (target, type, projectId) => {
+    const targetDiv = document.getElementById(`div-${target}`);
     
     const divData = {
         tagName: 'div',
         attributes: [
-            {name: 'id', value: 'div-exportCitations-div'},
+            {name: 'id', value: `div-${target}-div`},
             {name: 'class', value: 'importExportCitations'},
         ]
     };
@@ -55,12 +61,12 @@ const createExportButton = (projectId) => {
     const downloadFileFormData = {
         tagName: 'form',
         attributes: [
-            {name: 'id', value: 'form-exportCitations'},
+            {name: 'id', value: `form-${target}`},
             {name: 'method', value: 'get'},
             {name: 'action', value: 'api/importExport.php'},
         ],
         eventListeners: [
-            {event: 'submit', listener: (evt) => beforeSubmitExportForm(evt, projectId, 'form-exportCitations')}
+            {event: 'submit', listener: (evt) => beforeSubmitExportForm(evt, type, projectId, `form-${target}`)}
         ]
     };
 
@@ -95,7 +101,7 @@ const createExportButton = (projectId) => {
 
     div.appendChild(downloadFileForm);
 
-    exportCitationsDiv.appendChild(div);
+    targetDiv.appendChild(div);
 };
 
 const createImportHelpElement = (projectId, annotationType) => {

@@ -20,6 +20,27 @@
     box-shadow: 0px 2px 0px #a82424;
 }
 
+.editButton {
+    display: flex;
+    position: relative;
+    background-color: #dec8b5;
+    height: 30px;
+    align-self: center;
+    border-style: none;
+    cursor: pointer;
+    margin: 5px;
+    align-items: center;
+    font-size: 14px;
+    border-radius: 2px;
+    box-shadow: 0px 2px 0px #ceac8e;
+}
+
+.editButton:hover {
+    color:  rgb(233, 233, 233);
+    background-color: #e67e22;
+    box-shadow: 0px 2px 0px #cd6509;
+}
+
 .errorMessage {
     z-index: 11;
     position: absolute;

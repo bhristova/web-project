@@ -2,6 +2,7 @@ import { updateProject, getProjectById } from './api.js';
 import {createSidebar} from './sidebar.js';
 import createElement from './element.js';
 import errorMessage from './error-message.js';
+import successMessage from './success-message.js';
 
 let projectData = [];
 
@@ -16,7 +17,7 @@ const getId = () => {
 
 const getProjectContent = () => {
     const projectContent = document.getElementById('projectContent');
-    return projectContent?.value;
+    return projectContent?.innerHTML;
 };
 
 const getProjectName = () => {
@@ -28,7 +29,7 @@ const loadData = (data) => {
     projectData = data;
 
     const projectContent = document.getElementById('projectContent');
-    projectContent.value = data.content || '';
+    projectContent.innerHTML = data.content || '';
 
     const projectName = document.getElementById('projectName');
     projectName.value = data.name || '';
@@ -61,7 +62,6 @@ const saveProject = async () => {
         name: getProjectName(), 
         content: getProjectContent(), 
         annotationType: projectData['annotationType'],
-        idk: projectData['idk']
     };
 
     const params = [];
@@ -72,7 +72,9 @@ const saveProject = async () => {
     try {
         const projects = await updateProject(params, headers);
         if(!projects.success) {
-        errorMessage(projects.message);
+            errorMessage(projects.message);
+        } else {
+            successMessage('Успешно редактирахте проекта!');
         }
     } catch (err) {
         errorMessage(err);
@@ -114,6 +116,7 @@ const showAddCitation = () => {
 document.getElementById('button-addCitation').addEventListener('click', () => showAddCitation());
 document.getElementById('button-backToProjects').addEventListener('click', () => backToAllProjects());
 document.getElementById('projectSaveButton').addEventListener('click', async () => await saveProject());
+document.getElementById('projectContent').addEventListener('ondrop', () => onDrop());
 
 (async () => {
     try {

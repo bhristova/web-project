@@ -9,6 +9,23 @@ const createSidebar = (annotationType, id) => {
     showChooseCitationSource(annotationType);
 };
 
+const onExportBibliographyClick = () => {
+    const divExportBibliography = document.getElementById('div-exportBibliography');
+
+    if( divExportBibliography.style.height === '80%') {
+        return;
+    }
+
+    removeNewCitationElements();
+    removeExistingCitationElements();
+    removeImportCitationsElements();
+    removeExportCitationsElements();
+
+    divExportBibliography.style.height = '80%';
+
+    createExportButton('exportBibliography', 'bibliography', projectId);
+};
+
 const onExistingCitationClick = async (annotationType) => {
     const divExistingCitation = document.getElementById('div-existingCitation');
 
@@ -19,6 +36,7 @@ const onExistingCitationClick = async (annotationType) => {
     removeNewCitationElements();
     removeImportCitationsElements();
     removeExportCitationsElements()
+    removeExportBibliographyElements();
 
     divExistingCitation.style.height = '80%';
 
@@ -35,10 +53,11 @@ const onExportCitationsClick = () => {
     removeNewCitationElements();
     removeExistingCitationElements();
     removeImportCitationsElements();
+    removeExportBibliographyElements();
 
     divExportCitations.style.height = '80%';
 
-    createExportButton(projectId);
+    createExportButton('exportCitations', 'citations', projectId);
 };
 
 const onImportCitationsClick = (annotationType) => {
@@ -51,13 +70,14 @@ const onImportCitationsClick = (annotationType) => {
     removeNewCitationElements();
     removeExistingCitationElements();
     removeExportCitationsElements();
+    removeExportBibliographyElements();
     
     divImportCitations.style.height = '80%';
 
     createImportHelpElement(projectId, annotationType);
 };
 
-const onNewCitationClick = (annotationType) => {
+const onNewCitationClick = (annotationType, data) => {
     const divNewCitation = document.getElementById('div-newCitation');
 
     if( divNewCitation.style.height === '80%') {
@@ -66,11 +86,12 @@ const onNewCitationClick = (annotationType) => {
     
     removeExistingCitationElements();
     removeImportCitationsElements();
-    removeExportCitationsElements()
+    removeExportCitationsElements();
+    removeExportBibliographyElements();
     
     divNewCitation.style.height = '80%';
 
-    newCitation(annotationType, projectId);
+    newCitation(annotationType, projectId, data? data[0] : null);
 };
 
 const removeElement = (source, elementId) => {
@@ -78,6 +99,16 @@ const removeElement = (source, elementId) => {
     if(element) {
         source.removeChild(element);
     }
+};
+
+const removeExportBibliographyElements = () => {
+    const divExportBibliography = document.getElementById('div-exportBibliography');
+
+    ['div-exportBibliography-div'].forEach(id => {
+        removeElement(divExportBibliography, id);
+    });
+
+    divExportBibliography.style.height = 'auto';
 };
 
 const removeExistingCitationElements = () => {
@@ -165,11 +196,13 @@ const showChooseCitationSource = (annotationType) => {
     const divExistingCitation = createButtonInDiv('existingCitation', 'Избери от списък', async () => await onExistingCitationClick(annotationType));
     const divImportCitations = createButtonInDiv('importCitations', 'Импорт на цитати', () => onImportCitationsClick(annotationType), 'importCitations');
     const divExportCitations = createButtonInDiv('exportCitations', 'Експорт на цитати', () => onExportCitationsClick());
+    const divExportBibliography = createButtonInDiv('exportBibliography', 'Експорт на страница с библиография', () => onExportBibliographyClick());
 
     sidebar.appendChild(divNewCitation);
     sidebar.appendChild(divExistingCitation);
     sidebar.appendChild(divImportCitations);
     sidebar.appendChild(divExportCitations);
+    sidebar.appendChild(divExportBibliography);
 };
 
-export {createSidebar, onExistingCitationClick};
+export {createSidebar, onExistingCitationClick, onNewCitationClick};

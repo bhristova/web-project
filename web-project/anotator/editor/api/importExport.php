@@ -6,43 +6,41 @@ spl_autoload_register(function($className) {
     require_once("../libs/$className.php");
 });
 
-$projectController = new CitationsController();
+$citationsController = new CitationsController();
 
 switch ($_SERVER['REQUEST_METHOD']) {
     
     case 'GET': {
-         foreach(glob('citations-*.txt') as $file )
+        foreach(glob('citations-*.txt') as $file )
+        {
+            unlink($file);
+        }
+
+        foreach(glob('bibliography-*.txt') as $file )
         {
             unlink($file);
         }
 
         $projectId = $_REQUEST['projectId'] ?? null;
+        $exportType = $_REQUEST['exportType'] ?? null;
         
-        $content = '';
-        if(!empty($projectId)) {
-            $citationsArray =  $projectController->getCitationsByProjectId($projectId);
-        } else {
-            $citationsArray = $projectController->getAllCitations();
+        if(!empty($projectId) && !empty($exportType)) {
+
+            if($exportType == 'citations') {
+                $fileName =  $citationsController->gitCitationsFile($projectId);
+            }
+
+            if($exportType == 'bibliography') {
+                $fileName =  $citationsController->gitBibliographyFile($projectId);
+            }
+
+            header("Content-Disposition: attachment; filename=\"" . $fileName . "\"");
+            header("Content-Type: application/force-download");
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate');
+            header('Pragma: public');
+            header('Content-Type: text/plain');
         }
-
-        foreach ($citationsArray as &$row) {
-            $content .= '\'' . $row['sourceType'] . '\', \'' . $row['formattedCitation'] . '\', \'' . $row['inTextCitation'] . '\', \'' . $row['quote'] . '\';';
-        }
-
-        $content = mb_substr($content, 0, -1);
-        $namefile = 'citations-' . uniqid() . '.txt';
-        echo $content;
-
-        $file = fopen($namefile, "w") or die("Unable to open file!");
-        fwrite($file, $content);
-        fclose($file);
-
-        header("Content-Disposition: attachment; filename=\"" . $namefile . "\"");
-        header("Content-Type: application/force-download");
-        header('Expires: 0');
-        header('Cache-Control: must-revalidate');
-        header('Pragma: public');
-        header('Content-Type: text/plain');
 
         break;
     }
@@ -68,7 +66,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
                     return;
                 }
 
-                $added = $projectController->importNewCitation($citationRequest);
+                $added = $citationsController->importNewCitation($citationRequest);
                 if(!$added) {
                     echo json_encode(['success' => false, 'message' => 'Error when trying to save' ]);
                     return;

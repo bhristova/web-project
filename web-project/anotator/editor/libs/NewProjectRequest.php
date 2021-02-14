@@ -10,15 +10,12 @@ class NewProjectRequest {
 
     private string $content;
 
-    private string $idk;
-
     public function __construct(array $projectData) {
 
         $this->id = isset($projectData['id']) ? $projectData['id'] : uniqid();
         $this->name = isset($projectData['name']) ? $projectData['name'] : "";
         $this->annotationType = isset($projectData['annotationType']) ? $projectData['annotationType'] : "";
         $this->content = isset($projectData['content']) ? $projectData['content'] : "";
-        $this->idk = isset($projectData['idk']) ? $projectData['idk'] : "";
     }
 
     public function getId(): string {
@@ -29,24 +26,7 @@ class NewProjectRequest {
 
         $errors = [];
 
-        // $this->validateNonEmpty('id', $errors);
         $this->validateNonEmpty('name', $errors);
-        // $this->validateNonEmpty('annotationType', $errors);
-        // $this->validateNonEmpty('content', $errors);
-        // $this->validateNonEmpty('idk', $errors);
-
-        // if (filter_var($this->email, FILTER_VALIDATE_EMAIL) == false) {
-        //     $errors['email'] = "Invalid email!";
-        // }
-
-        // // if (preg_match("/^[а-яА-Я ]*$/", $this->name) == false) {
-        // //     $errors['name'] = "Invalid user name";
-        // // }
-
-        // if ($this->status != "owner" && $this->status != "tenant") {
-        //    $errors['status'] = "Invalid status";
-        // }
-
         if ($errors) {
             throw new RequestValidationException($errors);
         }
@@ -66,7 +46,6 @@ class NewProjectRequest {
             'name' => $this->name,
             'annotationType' => $this->annotationType,
             'content' => $this->content,
-            'idk' => $this->idk,
         ];
     }
 

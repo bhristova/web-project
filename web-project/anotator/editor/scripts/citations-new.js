@@ -1,5 +1,5 @@
 import createElement from './element.js';
-import {createCitation} from './api.js';
+import {createCitation, updateCitation} from './api.js';
 import errorMessage from './error-message.js';
 import successMessage from './success-message.js';
 import {onExistingCitationClick} from './sidebar.js';
@@ -18,7 +18,7 @@ const appendToDiv = (divId, children) => {
     }
 };
 
-const onSubmit = async (evt, id, citationType) => {
+const onSubmit = async (evt, id, citationType, data) => {
     evt.preventDefault();
     const form = document.getElementById('div-newCitation-form');
 
@@ -57,21 +57,69 @@ const onSubmit = async (evt, id, citationType) => {
     form.appendChild(sourceType);
     form.appendChild(projectId);
 
-    try {
-        const response = await createCitation(new URLSearchParams(new FormData(evt.target)));
-        if(!response.success) {
-            errorMessage(response.message);
-            return;
-        }
+    if(data) {
+        const citationIdData = {
+            tagName: 'input',
+            attributes: [
+                {name: 'name', value: 'id'},
+                {name: 'value', value: data.id},
+                {name: 'type', value: 'hidden'},
+            ]
+        };
 
-        successMessage('Успешно създадохте нов цитат!');
-        onExistingCitationClick(citationType);
-    } catch (err) {
-        errorMessage(err);
+        const sourceTypeData = {
+            tagName: 'input',
+            attributes: [
+                {name: 'name', value: 'sourceType'},
+                {name: 'value', value: data.sourceType},
+                {name: 'type', value: 'hidden'},
+            ]
+        };
+
+        const citationId = createElement(citationIdData);
+        const sourceType = createElement(sourceTypeData);
+
+        form.appendChild(citationId);
+        form.appendChild(sourceType);
+
+        try {
+            const response = await updateCitation(new URLSearchParams(new FormData(evt.target)));
+            if(!response.success) {
+                errorMessage(response.message);
+                return;
+            }
+
+            successMessage('Успешно редактирахте цитат!');
+            onExistingCitationClick(citationType);
+        } catch (err) {
+            errorMessage(err);
+        }
+    } else {
+        try {
+            const response = await createCitation(new URLSearchParams(new FormData(evt.target)));
+            if(!response.success) {
+                errorMessage(response.message);
+                return;
+            }
+
+            successMessage('Успешно създадохте нов цитат!');
+            onExistingCitationClick(citationType);
+        } catch (err) {
+            errorMessage(err);
+        }
     }
 };
 
-const createChooseTypeOfCitationElement = (optionsTypeOfCitation) => {
+const createChooseTypeOfCitationElement = (optionsTypeOfCitation, data) => {
+    if (!optionsTypeOfCitation || !optionsTypeOfCitation.length) {
+        return;
+    }
+
+    let citationType = optionsTypeOfCitation[0];
+    if(data && data.quote) {
+        citationType = optionsTypeOfCitation[1];
+    }
+
     const divNewCitation = document.getElementById('div-newCitation');
 
     const selectData = {
@@ -81,6 +129,7 @@ const createChooseTypeOfCitationElement = (optionsTypeOfCitation) => {
             {name: 'id', value: 'select-newCitation-typeCitation'},
         ],
         options: optionsTypeOfCitation.map(elem => ({value: elem})),
+        defaultOption: citationType,
         eventListeners: [
             {event: 'change', listener: (evt) => onTypeOfCitationChoosen(evt)}
         ]
@@ -105,8 +154,11 @@ const createChooseTypeOfCitationElement = (optionsTypeOfCitation) => {
     divNewCitation.appendChild(select);
 };
 
-
 const createChooseTypeOfSourceElement = (optionsTypeOfSource, fields) => {
+    if (!optionsTypeOfSource || !optionsTypeOfSource.length) {
+        return;
+    }
+
     const divNewCitation = document.getElementById('div-newCitation');
 
     const selectEventListener = (evt) => {
@@ -175,9 +227,9 @@ const getSourceType = () => {
     return sourceDiv?.value;
 };
 
-const newCitation = (optionsTypeOfSource, optionsTypeOfCitation, fields, projectId, citationType) => {
+const newCitation = (optionsTypeOfSource, optionsTypeOfCitation, fields, projectId, citationType, data) => {
     createChooseTypeOfSourceElement(optionsTypeOfSource, fields);
-    createChooseTypeOfCitationElement(optionsTypeOfCitation);
+    createChooseTypeOfCitationElement(optionsTypeOfCitation, data);
 
     const divNewCitation = document.getElementById('div-newCitation');
 
@@ -187,10 +239,9 @@ const newCitation = (optionsTypeOfSource, optionsTypeOfCitation, fields, project
             {name: 'id', value: 'div-newCitation-form'},
             {name: 'class', value: 'newCitation'},
             {name: 'method', value: 'post'},
-            {name: 'action', value: 'baligo'},
         ],
         eventListeners: [
-            {event: 'submit', listener: (args) => onSubmit(args, projectId, citationType)},
+            {event: 'submit', listener: (args) => onSubmit(args, projectId, citationType, data)},
         ]
     };
 
@@ -198,20 +249,32 @@ const newCitation = (optionsTypeOfSource, optionsTypeOfCitation, fields, project
 
     divNewCitation.appendChild(div);
 
-    showInputFields(fields);
+    showInputFields(fields, data);
     showSaveButton();
+
+    if(data && data.quote) {
+        onTypeOfCitationChoosen(null, data.quote);
+    }
 };
 
-const onTypeOfCitationChoosen = (evt) => {
+const onTypeOfCitationChoosen = (evt, value) => {
     const divNewCitationForm = document.getElementById('div-newCitation-form');
 
-    if (evt.target.value.toLowerCase() === 'цитат') {
+    let type = '';
+    if(evt && evt.target && evt.target.value) {
+        type = evt.target.value;
+    } else if (value) {
+        type = 'Цитат';
+    }
+
+    if (type.toLocaleLowerCase() === 'цитат') {
         const quoteData = {
             tagName: 'input',
             attributes: [
                 {name: 'id', value: 'input-quote'},
                 {name: 'name', value: 'quote'},
-                {name: 'required', value: true}
+                {name: 'required', value: true},
+                {name: 'value', value: value || ''},
             ]
         };
 
@@ -241,15 +304,21 @@ const onTypeOfCitationChoosen = (evt) => {
         }
     }
 };
-
-const showInputFields = (fields) => {
+const showInputFields = (fields, data) => {
     fields.forEach(field => {
 
+        let value = '';
+        if (data) {
+            const valueKey = Object.keys(data).find(key => key.toLocaleLowerCase() === field.id.toLocaleLowerCase());
+            value = valueKey ? data[valueKey] : '';
+        }
+        
         const inputData = {
             tagName: 'input',
             attributes: [
                 {name: 'name', value: field.id},
                 {name: 'id', value: `input-${field.id}`},
+                {name: 'value', value: value},
             ],
             eventListeners: [
                 {event: 'change', listener: field.handler},

@@ -1,4 +1,5 @@
-import { deleteCitation, getCitationsByProjectId } from './api.js';
+import { deleteCitation, getCitationsByProjectId, getCitationById } from './api.js';
+import { onNewCitationClick } from './sidebar.js';
 import createElement from './element.js';
 import errorMessage from './error-message.js';
 
@@ -66,7 +67,7 @@ const addCitationToTable = (citation) => {
         tagName: 'td'
     };
 
-    const buttonData = {
+    const deleteButtonData = {
         tagName: 'button',
         attributes: [
             {name: 'id', value: `button-delete-${citation.id}`},
@@ -80,11 +81,28 @@ const addCitationToTable = (citation) => {
         ]
     };
 
-    const tdButton = createElement(tdButtonData);
-    const button = createElement(buttonData);
+    const editButtonData = {
+        tagName: 'button',
+        attributes: [
+            {name: 'id', value: `button-edit-${citation.id}`},
+            {name: 'class', value: `editButton`},
+        ],
+        properties: [
+            {name: 'innerHTML', value: 'Редактирай'}
+        ],
+        eventListeners: [
+            {event: 'click', listener: (evt) => onEditClick(evt, citation.id)}
+        ]
+    };
 
-    tdButton.appendChild(button);
-    tr.appendChild(tdButton);
+    const tdButtons = createElement(tdButtonData);
+
+    const buttonDelete = createElement(deleteButtonData);
+    const buttonEdit = createElement(editButtonData);
+
+    tdButtons.appendChild(buttonDelete);
+    tdButtons.appendChild(buttonEdit);
+    tr.appendChild(tdButtons);
 
     table.appendChild(tr);
 };
@@ -158,6 +176,11 @@ const onDeleteClick = async (evt) => {
     }
 };
 
+const onEditClick = async (evt, citationId) => {
+    const citationData = await getCitationById(citationId);
+    onNewCitationClick('editexistingcitation', citationData);
+}
+
 const onDragEnd = (evt) => {
     evt.currentTarget.style.backgroundColor = 'white';
 }
@@ -176,7 +199,9 @@ const onDragStart = (evt) => {
         result = `(${citationIndex}) ${inTextCitation}`;
     }
 
-    evt.dataTransfer.setData('text/plain', result);
+    result = `<customCitationTag id='${sourceId}'>${result}</customCitationTag>`;
+
+    evt.dataTransfer.setData('text/html', result);
 
     evt.currentTarget.style.backgroundColor = '#dec8b5';
 };
@@ -195,7 +220,9 @@ const onDragStartInTextNote = (evt) => {
         result = `${result} "${quote}"`;
     }
 
-    evt.dataTransfer.setData('text/plain', result);
+    result = `<customCitationTag id='${sourceId}'>${result}</customCitationTag>`;
+
+    evt.dataTransfer.setData('text/html', result);
 
     evt.currentTarget.style.backgroundColor = '#dec8b5';
 };

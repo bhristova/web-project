@@ -22,16 +22,21 @@ const createElement = (data) => {
     }
 
     if (data.options) {
-        setElementOptions(element, data.options);
+        setElementOptions(element, data.options, data.defaultOption);
     }
 
     return element;
 }
 
-const setElementOptions = (element, options) => options.forEach(option => {
+const setElementOptions = (element, options, defaultOption) => options.forEach(option => {
         const optionElement = document.createElement('option');
         optionElement.value = option.value;
         optionElement.text = option.value;
+
+        if(defaultOption === option.value) {
+            optionElement.selected = true;
+        }
+
         element.appendChild(optionElement);
     });
 

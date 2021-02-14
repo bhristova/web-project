@@ -1,0 +1,10 @@
+{
+	"name": "Е-книга",
+	"fields": [
+		{ "number": 0, "name": "authorLastName", "label": "Last name of author", "required": true },
+		{ "number": 1, "name": "quote", "label": "Quote" },
+		{ "number": 2, "name": "date", "label": "Date" }
+	],
+    "inTextCitationStyle": "\"{quote}\" ({date})",
+    "bibliographyTextStyle": "{authorLastName}, {date}."
+}

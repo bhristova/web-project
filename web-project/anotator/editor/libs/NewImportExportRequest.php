@@ -33,21 +33,6 @@ class NewImportExportRequest {
 
         $this->validateSourceType($errors);
 
-        // $this->validateNonEmpty('projectId', $errors);
-        // $this->validateNonEmpty('idk', $errors);
-
-        // if (filter_var($this->email, FILTER_VALIDATE_EMAIL) == false) {
-        //     $errors['email'] = "Invalid email!";
-        // }
-
-        // // if (preg_match("/^[а-яА-Я ]*$/", $this->name) == false) {
-        // //     $errors['name'] = "Invalid user name";
-        // // }
-
-        // if ($this->status != "owner" && $this->status != "tenant") {
-        //    $errors['status'] = "Invalid status";
-        // }
-
         if ($errors) {
             throw new RequestValidationException($errors);
         }

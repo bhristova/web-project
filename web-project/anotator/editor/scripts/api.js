@@ -50,6 +50,16 @@ const createCitation = async (params) => {
     return response.json();
 };
 
+const updateCitation = async (params) => {
+    const response = await fetch(`${apiRoute}citations.php`, {
+        method: 'PUT',
+        body: params,
+        mode: 'cors'
+    });
+    
+    return response.json();
+}
+
 const importCitations = async (params) => {
     const response = await fetch(`${apiRoute}importExport.php`, {
         method: 'POST',
@@ -61,6 +71,12 @@ const importCitations = async (params) => {
 
 const getCitations = async () => {
     const response = await fetch(`${apiRoute}citations.php`);
+    
+    return response.json();
+};
+
+const getCitationById = async (id) => {
+    const response = await fetch(`${apiRoute}citations.php?id=${id}`);
     
     return response.json();
 };
@@ -79,4 +95,4 @@ const deleteCitation = async (id) => {
     return response.text();
 };
 
-export {createProject, updateProject, getProjectById, deleteProject, getProjects, createCitation, importCitations, getCitations, getCitationsByProjectId, deleteCitation};
+export {createProject, updateProject, getProjectById, deleteProject, getProjects, createCitation, updateCitation, importCitations, getCitations, getCitationById, getCitationsByProjectId, deleteCitation};

@@ -1,7 +1,7 @@
 import citation from './citations-new.js';
 import table from './citations-table.js';
 
-const allowedTypesCitations = ['apa', 'mla', 'chicago'];
+const allowedTypesCitations = ['apa', 'mla', 'chicago', 'editexistingcitation'];
 
 const citationFieldsMapping = {
     mla: [
@@ -40,6 +40,10 @@ const citationFieldsMapping = {
         {number: 10, name: 'dateOfAccess', id: 'dateOfAccess', label: 'Дата на достъп'},
         {number: 11, name: 'location', id: 'location', label: 'Местоположение'},
     ],
+    editexistingcitation: [
+        {number: 1, name: 'formattedCitation', id: 'formattedCitation', label: 'Текст за библиография', required: true},
+        {number: 2, name: 'inTextCitation', id: 'inTextCitation', label: 'Текст за съдържание', required: true},
+    ]
 }
 
 const citationSourceTypesMapping = {
@@ -60,18 +64,30 @@ const tableColumnsMapping = {
     chicago: ['Вид на източника', 'Цитирана работа', 'Цитат', 'Бележка под линия'],
 }
 
-const newCitation = (type, projectId) => {
-    const citationType = allowedTypesCitations.find(allowedType => allowedType === type.toLowerCase());
+const newCitation = (type, projectId, data) => {
+    if (!data) {
+        const citationType = allowedTypesCitations.find(allowedType => allowedType === type.toLowerCase());
 
-    if(!citationType) {
-        return;
-        //maybe error?
+        if(!citationType) {
+            return;
+        }
+
+        const citationFields = citationFieldsMapping[citationType];
+        const citationSourceTypes = citationSourceTypesMapping[citationType];
+        const citationCitationsType = citationCitationTypesMapping[citationType];
+        citation(citationSourceTypes, citationCitationsType, citationFields, projectId, type);
+    } else {
+        const citationType = data.annotationType || type;
+        const citationTypeExists = allowedTypesCitations.find(allowedType => allowedType === citationType.toLowerCase());
+
+        if(!citationTypeExists) {
+            return;
+        }
+
+        const citationFields = citationFieldsMapping[citationType];
+        const citationCitationsType = citationCitationTypesMapping[citationType];
+        citation([], citationCitationsType, citationFields, projectId, citationType, data);
     }
-
-    const citationFields = citationFieldsMapping[citationType];
-    const citationSourceTypes = citationSourceTypesMapping[citationType];
-    const citationCitationsType = citationCitationTypesMapping[citationType];
-    citation(citationSourceTypes, citationCitationsType, citationFields, projectId, type);
 }
 
 const newTable = (type, projectId) => {

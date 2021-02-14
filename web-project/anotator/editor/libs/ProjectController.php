@@ -34,8 +34,8 @@ class ProjectController {
             $connection = (new Db())->getConnection();
 
             $insertStatement = $connection->prepare("
-                INSERT INTO `project` (id, name, annotationType, content, idk)
-                    VALUES (:id, :name, :annotationType, :content, :idk)
+                INSERT INTO `project` (id, name, annotationType, content)
+                    VALUES (:id, :name, :annotationType, :content)
             ");
 
             $result = $insertStatement->execute($projectRequest->toArray());
@@ -54,7 +54,7 @@ class ProjectController {
 
             $insertStatement = $connection->prepare("
                 UPDATE `project`
-                SET id=:id, name=:name, annotationType=:annotationType, content=:content, idk=:idk
+                SET id=:id, name=:name, annotationType=:annotationType, content=:content
                 WHERE id=:id
             ");
 
@@ -80,6 +80,15 @@ class ProjectController {
             $deleteStatement->bindValue(':id', $id);
 
             $result = $deleteStatement->execute();
+
+            $deleteStatementCitations = $connection->prepare("
+                DELETE FROM `citation`
+                WHERE projectId = :id
+            ");
+
+            $deleteStatementCitations->bindValue(':id', $id);
+
+            $result = $deleteStatementCitations->execute();
             
         } catch (PDOException $e) {
             error_log($e->getMessage());
