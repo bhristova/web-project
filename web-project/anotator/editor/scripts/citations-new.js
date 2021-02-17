@@ -154,10 +154,17 @@ const createChooseTypeOfCitationElement = (optionsTypeOfCitation, data) => {
     divNewCitation.appendChild(select);
 };
 
-const createChooseTypeOfSourceElement = (optionsTypeOfSource, fields) => {
+const createChooseTypeOfSourceElement = (optionsTypeOfSource, allFields, data) => {
     if (!optionsTypeOfSource || !optionsTypeOfSource.length) {
         return;
     }
+
+    const currentFields = allFields.find(elem => elem.SourceName.toLowerCase() == optionsTypeOfSource[0].toLowerCase());
+    if(!currentFields) {
+        return;
+    }
+
+    const fields = JSON.parse(currentFields.config);
 
     const divNewCitation = document.getElementById('div-newCitation');
 
@@ -196,6 +203,9 @@ const createChooseTypeOfSourceElement = (optionsTypeOfSource, fields) => {
             {name: 'id', value: 'select-newCitation-typeSource'},
         ],
         options: optionsTypeOfSource.map(elem => ({value: elem})),
+        eventListeners: [
+            {event: 'change', listener: (evt) => showInputFields(allFields, data, evt.target.value.toLowerCase())},
+        ]
     };
 
     const fieldsWithCondition = fields.filter(field => field.condition);
@@ -228,7 +238,7 @@ const getSourceType = () => {
 };
 
 const newCitation = (optionsTypeOfSource, optionsTypeOfCitation, fields, projectId, citationType, data) => {
-    createChooseTypeOfSourceElement(optionsTypeOfSource, fields);
+    createChooseTypeOfSourceElement(optionsTypeOfSource, fields, data);
     createChooseTypeOfCitationElement(optionsTypeOfCitation, data);
 
     const divNewCitation = document.getElementById('div-newCitation');
@@ -249,8 +259,7 @@ const newCitation = (optionsTypeOfSource, optionsTypeOfCitation, fields, project
 
     divNewCitation.appendChild(div);
 
-    showInputFields(fields, data);
-    showSaveButton();
+    showInputFields(fields, data, optionsTypeOfSource[0]);
 
     if(data && data.quote) {
         onTypeOfCitationChoosen(null, data.quote);
@@ -304,7 +313,16 @@ const onTypeOfCitationChoosen = (evt, value) => {
         }
     }
 };
-const showInputFields = (fields, data) => {
+const showInputFields = (allFields, data, sourceType) => {
+    const currentFields = allFields.find(elem => elem.SourceName.toLowerCase() == sourceType.toLowerCase());
+    if(!currentFields) {
+        return;
+    }
+
+    const divNewCitation = document.getElementById('div-newCitation-form');
+    [...divNewCitation.childNodes].forEach(elem => elem.remove());
+
+    const fields = JSON.parse(currentFields.config);
     fields.forEach(field => {
 
         let value = '';
@@ -351,6 +369,8 @@ const showInputFields = (fields, data) => {
 
         appendToDiv('div-newCitation-form', [ label, input]);
     });
+
+    showSaveButton();
 };
 
 const showSaveButton = () => {

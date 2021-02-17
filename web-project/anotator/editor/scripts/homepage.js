@@ -1,4 +1,5 @@
 import { createProject, deleteProject, getProjects } from './api.js';
+import newSourceType from './source-new.js';
 import createElement from './element.js';
 import errorMessage from './error-message.js';
 import successMessage from './success-message.js';
@@ -71,10 +72,18 @@ const onAllCitationsClick = () => {
 };
 
 const onAllProjects = async () => {
+    const buttonsForm = document.getElementById('buttonsForm');
+    buttonsForm.style.height = '400px';
+    
     const projectDataContainer = document.getElementById('projectDataContainer');
+
     const projectChooser = document.getElementById('projectChooser');
+    const newSourceType = document.getElementById('newSourceType');
     if(projectChooser) {
         return;
+    }
+    if(newSourceType) {
+        projectDataContainer.removeChild(newSourceType);
     }
 
     const newProject = document.getElementById('newProject');
@@ -120,11 +129,18 @@ const onDeleteClick = async (evt, projectId) => {
 };
 
 const onNewForm = () => {
+    const buttonsForm = document.getElementById('buttonsForm');
+    buttonsForm.style.height = '400px';
+
     const projectDataContainer = document.getElementById('projectDataContainer');
 
     const projectChooser = document.getElementById('projectChooser');
+    const newSourceType = document.getElementById('newSourceType');
     if(projectChooser) {
         projectDataContainer.removeChild(projectChooser);
+    }
+    if(newSourceType) {
+        projectDataContainer.removeChild(newSourceType);
     }
 
     let div = document.getElementById('newProject');
@@ -134,7 +150,7 @@ const onNewForm = () => {
     const annotationValues = ['APA', 'MLA', 'Chicago']
 
     const divData = {
-        tagName: 'div',
+        tagName: 'form',
         attributes: [
             {name: 'id', value: `newProject`},
             {name: 'class', value: `newForm`},
@@ -211,7 +227,28 @@ const onNewForm = () => {
 
     div.appendChild(button);
 
+    div.addEventListener('submit', (evt) => addNewProject(evt))
+
+
     projectDataContainer.appendChild(div);
+};
+
+const onNewSource = () => {
+    const projectDataContainer = document.getElementById('projectDataContainer');
+
+    const projectChooser = document.getElementById('projectChooser');
+    const newProject = document.getElementById('newProject');
+    if(projectChooser) {
+        projectDataContainer.removeChild(projectChooser);
+    }
+    if(newProject) {
+        projectDataContainer.removeChild(newProject);
+    }
+
+    const buttonsForm = document.getElementById('buttonsForm');
+    buttonsForm.style.height = '700px';
+
+    newSourceType();
 };
 
 const imageNewProject = document.getElementById('imageNewProject');
@@ -229,5 +266,10 @@ imageSummary.addEventListener('mouseover', () => imageSummary.setAttribute('src'
 imageSummary.addEventListener('mouseout', () => imageSummary.setAttribute('src', './files/project-summary.png'));
 imageSummary.addEventListener('click', () => onAllCitationsClick());
 
-const buttonsForm = document.getElementById('buttonsForm');
-buttonsForm.addEventListener('submit', (evt) => addNewProject(evt))
+const imageNewSource = document.getElementById('imageNewSource');
+imageNewSource.addEventListener('mouseover', () => imageNewSource.setAttribute('src', './files/project-existing-hover.png'));
+imageNewSource.addEventListener('mouseout', () => imageNewSource.setAttribute('src', './files/project-new.png'));
+imageNewSource.addEventListener('click', () => onNewSource());
+
+// const buttonsForm = document.getElementById('newProject');
+// buttonsForm.addEventListener('submit', (evt) => addNewProject(evt))

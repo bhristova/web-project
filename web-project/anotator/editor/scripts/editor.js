@@ -40,7 +40,7 @@ const loadData = (data) => {
 const onCloseSidebar = () => {
     const sidebar = document.getElementById('sidebar');
 
-    ['input-projectAnnotation', 'div-newCitation', 'div-existingCitation', 'div-importCitations', 'div-exportCitations'].forEach(id => {
+    ['input-projectAnnotation', 'div-newCitation', 'div-existingCitation', 'div-importCitations', 'div-exportCitations', 'div-exportBibliography'].forEach(id => {
         removeElement(sidebar, id);
     });
 };

@@ -8,3 +8,5 @@
     "inTextCitationStyle": "\"{quote}\" ({date})",
     "bibliographyTextStyle": "{authorLastName}, {date}."
 }
+
+/* this will be present for all anotation types */

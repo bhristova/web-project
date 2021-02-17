@@ -14,13 +14,22 @@ class NewImportExportRequest {
 
     private string $projectId;
 
-    public function __construct($fileContent, $projectId) {
+    public function __construct($fileContent, $projectId = '', $templateInTextCitation = '', $templateBibliographyCitation = '') {
         $this->id = uniqid();
-        $this->sourceType = $this->getParsedData($fileContent, 1);
-        $this->inTextCitation = $this->getParsedData($fileContent, 5);
-        $this->formattedCitation = $this->getParsedData($fileContent, 3);
-        $this->quote = $this->getParsedData($fileContent, 7);
-        $this->projectId = $projectId;
+
+        if (!empty($projectId)) {
+            $this->sourceType = $this->getParsedData($fileContent, 1);
+            $this->inTextCitation = $this->getParsedData($fileContent, 5);
+            $this->formattedCitation = $this->getParsedData($fileContent, 3);
+            $this->quote = $this->getParsedData($fileContent, 7);
+            $this->projectId = $projectId;
+        } else {
+            $this->sourceType = isset($fileContent['sourceType']) ? $fileContent['sourceType'] : '';
+            $this->inTextCitation = $this->replaceValuesInTemplate($fileContent, $templateInTextCitation);
+            $this->formattedCitation = $this->replaceValuesInTemplate($fileContent, $templateBibliographyCitation);
+            $this->quote = isset($fileContent['quote']) ? $fileContent['quote'] : '';
+            $this->projectId = isset($fileContent['projectId']) ? $fileContent['projectId'] : '';
+        }
     }
 
     public function validate(): void {
@@ -36,6 +45,18 @@ class NewImportExportRequest {
         if ($errors) {
             throw new RequestValidationException($errors);
         }
+    }
+
+    private function replaceValuesInTemplate($fileContent, $template): string {
+        $result = $template;
+        foreach ($fileContent as $key=>$item) {
+            $result = str_replace("{{$key}}", $item, $result);
+        }
+
+        $pattern = "/({.*?})/mi";
+        $result = preg_replace($pattern, "", $result);
+
+        return $result;
     }
 
     private function getParsedData($fileContent, $index): string {

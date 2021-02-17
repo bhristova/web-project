@@ -62,7 +62,7 @@ const updateCitation = async (params) => {
 
 const importCitations = async (params) => {
     const response = await fetch(`${apiRoute}importExport.php`, {
-        method: 'POST',
+    method: 'POST',
         body: params,
     });
     
@@ -95,4 +95,21 @@ const deleteCitation = async (id) => {
     return response.text();
 };
 
-export {createProject, updateProject, getProjectById, deleteProject, getProjects, createCitation, updateCitation, importCitations, getCitations, getCitationById, getCitationsByProjectId, deleteCitation};
+const getFieldConfig = async (name) => {
+    const response = await fetch(`${apiRoute}fieldsConfig.php?name=${name}`, {
+        method: 'GET',
+    });
+    
+    return response.json();
+};
+
+const createFieldConfig = async (params) => {
+    const response = await fetch(`${apiRoute}fieldsConfig.php`, {
+        method: 'POST',
+        body: params,
+    });
+    
+    return response.json();
+};
+
+export {createProject, updateProject, getProjectById, deleteProject, getProjects, createCitation, updateCitation, importCitations, getCitations, getCitationById, getCitationsByProjectId, deleteCitation, getFieldConfig, createFieldConfig};

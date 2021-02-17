@@ -32,13 +32,18 @@ switch ($_SERVER['REQUEST_METHOD']) {
             return;
         }
 
-        $added = $fieldsConfigController->addNewFieldConfig($fieldConfigRequest);
+        $propertiesForCitationSources = $fieldConfigRequest->getPropertiesForCitationSources();
+        $propertiesForCitationTypes_CitationSources = $fieldConfigRequest->getPropertiesForCitationTypes_CitationSources();
+
+        $addedCitationSource = $fieldsConfigController->addNewCitationSource($propertiesForCitationSources);
+        $addedFieldConfig = $fieldsConfigController->addNewFieldConfig($propertiesForCitationTypes_CitationSources);
         
-        if(!$added) {
-            echo json_encode(['success' => false || $added, 'message' => 'Error when trying to save']);
+        if(!$addedCitationSource || !$addedFieldConfig) {
+            echo json_encode(['success' => false, 'message' => 'Error when trying to save']);
             return;
         }
-        // echo json_encode(['success' => true, 'projectId' => $fieldConfigRequest->getId() ]);
+        
+        echo json_encode(['success' => true]);
         break;
     }
     

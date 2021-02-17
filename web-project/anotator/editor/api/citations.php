@@ -24,15 +24,31 @@ switch ($_SERVER['REQUEST_METHOD']) {
     }
 
     case 'POST': {
-        try {
-            $citationRequest = new NewCitationRequest($_POST);
-            $citationRequest->validate();
-        } catch (RequestValidationException $ex) {
-            echo json_encode(['success' => false, 'message' => $ex->getErrors()]);
-            return;
+
+        $citationRequest = [];
+        $citationSourceData = [];
+        $added = false;
+        $fieldsConfigController = new FieldsConfigController();
+        $citationSourceData = $fieldsConfigController->getCitationSourceByName($_POST['sourceType']);
+
+        if (!empty($citationSourceData)) {
+            $inTextCitation = $citationSourceData[0]['inTextCitation'] ?? null;
+            $bibliographyCitation = $citationSourceData[0]['bibliographyCitation'] ?? null;
         }
 
-        $added = $citationsController->addNewCitation($citationRequest);
+        if(empty($citationSourceData) || ((is_null($inTextCitation) || empty($inTextCitation)) && (is_null($bibliographyCitation) || empty($bibliographyCitation)))) {
+            try {
+                $citationRequest = new NewCitationRequest($_POST);
+                $citationRequest->validate();
+            } catch (RequestValidationException $ex) {
+                echo json_encode(['success' => false, 'message' => $ex->getErrors()]);
+                return;
+            }
+            $added = $citationsController->addNewCitation($citationRequest);
+        } else {
+            $citationRequest = new NewImportExportRequest($_POST, '', $citationSourceData[0]['inTextCitation'], $citationSourceData[0]['bibliographyCitation']);
+            $added = $citationsController->importNewCitation($citationRequest);
+        }
 
         echo json_encode(['success' => $added]);
 

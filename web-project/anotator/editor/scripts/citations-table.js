@@ -178,7 +178,7 @@ const onDeleteClick = async (evt) => {
 
 const onEditClick = async (evt, citationId) => {
     const citationData = await getCitationById(citationId);
-    onNewCitationClick('editexistingcitation', citationData);
+    onNewCitationClick('existingCitation', citationData);
 }
 
 const onDragEnd = (evt) => {
