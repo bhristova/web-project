@@ -2,6 +2,7 @@ import createElement from './element.js';
 import {createFieldConfig} from './api.js';
 import errorMessage from './error-message.js';
 import successMessage from './success-message.js';
+import {onAllProjects} from './homepage.js';
 
 const dbFields = ['authorFirstName', 'authorLastName', 'source', 'id', 'containerTitle', 'otherContributors', 'version', 'number', 'publisher', 'publicationDate', 'location'];
 
@@ -14,7 +15,7 @@ const newSourceType = () => {
     const annotationValues = [
         {name: 'APA', id: '89ed9c72-6614-4f8e-8cc2-838f84882421'}, 
         {name: 'MLA', id: 'cc618339-0496-4d52-8f51-0e8b7c912afc'}, 
-        {name: 'Chicago', id: '5e6d3b92-0260-4b41-bfde-dc7687338f8c'}, 
+        {name: 'Chicago', id: '5e6d3b92-0260-4b41-bfde-dc7687338f8c'},
     ];
 
     const divData = {
@@ -133,20 +134,28 @@ const newSourceType = () => {
             {name: 'class', value: `field`},
         ],
         properties: [
-            {name: 'value', value: 'Създайs'},
+            {name: 'value', value: 'Създай'},
         ],
     };
     const button = createElement(buttonData);
 
     div.appendChild(button);
 
-    div.addEventListener('submit', evt => beforeSubmit(evt));
+    div.addEventListener('submit', evt => beforeSubmit(evt, 'newSourceType'));
 
     projectDataContainer.appendChild(div);
 };
 
-const beforeSubmit = async (evt) => {
+const beforeSubmit = async (evt, formId) => {
     evt.preventDefault();
+    const form = document.getElementById(formId);
+    
+    const anotationTypeEdit = document.createElement('input');
+    anotationTypeEdit.setAttribute('name', 'anotationTypeEdit');
+    anotationTypeEdit.setAttribute('value', '93c895ee-b9d5-4559-a558-a8c5b1b221f3');
+    anotationTypeEdit.setAttribute('type', 'hidden');
+
+    form.appendChild(anotationTypeEdit);
 
     try {
         const response = await createFieldConfig(new URLSearchParams(new FormData(evt.target)));
@@ -154,6 +163,7 @@ const beforeSubmit = async (evt) => {
             errorMessage(response.message);
         }
         successMessage('Успешно създадохте нов темплейт за цитиране!');
+        onAllProjects();
 
     } catch (err) {
         errorMessage(err);
@@ -257,13 +267,13 @@ const createDragAndDropContainer = () => {
             {name: 'class', value: `field`},
         ],
         style: [
-            {name: 'height', value: '80px'},
+            {name: 'height', value: '102px'},
             {name: 'backgroundColor', value: 'rgb(233, 233, 233)'},
         ],
     }
     const divDragAndDrop = createElement(divDragAndDropData);
 
-    [...dbFields, 'quote'].forEach(elem => {
+    [...dbFields, 'quote', 'linkOnline', 'linkLibrary','linkArchive'].forEach(elem => {
         const pField = {
             tagName: 'a',
             properties: [
@@ -296,7 +306,7 @@ const createDragAndDropTextareas = () => {
             {name: 'class', value: `field`},
         ],
         properties: [
-            {name: 'innerHTML', value: 'InTextCitation'},
+            {name: 'innerHTML', value: 'Формат в текст'},
         ]
     };
 
@@ -316,7 +326,7 @@ const createDragAndDropTextareas = () => {
             {name: 'class', value: `field`},
         ],
         properties: [
-            {name: 'innerHTML', value: 'BibliographyCitation'},
+            {name: 'innerHTML', value: 'Формат в библиография'},
         ]
     };
 

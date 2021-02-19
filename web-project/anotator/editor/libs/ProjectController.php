@@ -3,11 +3,14 @@ declare(strict_types=1);
 
 class ProjectController {
 
+    public string $userId = 'cf8695c3-6e24-454a-b333-eb63c37ed7df'; //TODO: create login and add some sort of authentication, for example JWToken (if possible) and keep the userId there
+
     public function getAllProjects(): array {
 
         $projects = [];
+        $userId = $this->userId;
 
-        $query = (new Db())->getConnection()->query("SELECT id, name FROM `project`") or die("failed!");
+        $query = (new Db())->getConnection()->query("SELECT id, name FROM `project` WHERE createdBy='$userId'") or die("failed!");
 
         while ($project = $query->fetch()) {
             $projects[] = $project;
@@ -19,8 +22,9 @@ class ProjectController {
     public function getProjectById(string $id): array {
 
         $projects = [];
+        $userId = $this->userId;
 
-        $query = (new Db())->getConnection()->query("SELECT * FROM `project` WHERE id='$id'") or die("failed!");
+        $query = (new Db())->getConnection()->query("SELECT * FROM `project` WHERE id='$id' AND createdBy='$userId'") or die("failed!");
         while ($project = $query->fetch()) {
             $projects[] = $project;
         }
@@ -29,16 +33,18 @@ class ProjectController {
     }
 
     public function addNewProject(NewProjectRequest $projectRequest): bool {
-        
+        $projectRequestArray =  $projectRequest->toArray();
+        $projectRequestArray['userId'] = $this->userId;
+
         try {
             $connection = (new Db())->getConnection();
 
             $insertStatement = $connection->prepare("
-                INSERT INTO `project` (id, name, annotationType, content)
-                    VALUES (:id, :name, :annotationType, :content)
+                INSERT INTO `project` (id, name, annotationType, content, createdBy)
+                    VALUES (:id, :name, :annotationType, :content, :userId)
             ");
 
-            $result = $insertStatement->execute($projectRequest->toArray());
+            $result = $insertStatement->execute($projectRequestArray);
         } catch (PDOException $e) {
             error_log($e->getMessage());
             return $e->getMessage();

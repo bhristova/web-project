@@ -115,9 +115,11 @@ class CitationsController {
 
             $insertStatement = $connection->prepare('
                 INSERT INTO `citation` (id, authorFirstName, authorLastName, source, containerTitle, otherContributors, version,
-                number, page, publisher, publicationDate, location, annotationType, sourceType, projectId, formattedCitation, inTextCitation, quote, dateOfAccess, titleOfWebsite)
+                number, page, publisher, publicationDate, location, annotationType, sourceType, projectId, formattedCitation, inTextCitation, quote, dateOfAccess, titleOfWebsite,
+                linkOnline, linkArchive, linkLibrary)
                     VALUES (:id, :authorFirstName, :authorLastName, :source, :containerTitle, :otherContributors, :version,
-                    :number, :page, :publisher, :publicationDate, :location, :annotationType, :sourceType, :projectId, :formattedCitation, :inTextCitation, :quote, :dateOfAccess, :titleOfWebsite)
+                    :number, :page, :publisher, :publicationDate, :location, :annotationType, :sourceType, :projectId, :formattedCitation, :inTextCitation, :quote, :dateOfAccess, :titleOfWebsite,
+                    :linkOnline, :linkArchive, :linkLibrary)
             ');
 
             $result = $insertStatement->execute($citationRequestArray);
@@ -141,7 +143,8 @@ class CitationsController {
                 UPDATE `citation` 
                 SET id=:id, authorFirstName=:authorFirstName, authorLastName=:authorLastName, source=:source, containerTitle=:containerTitle, otherContributors=:otherContributors, version=:version,
                 number=:number, page=:page, publisher=:publisher, publicationDate=:publicationDate, location=:location, annotationType=:annotationType, sourceType=:sourceType, 
-                projectId=:projectId, formattedCitation=:formattedCitation, inTextCitation=:inTextCitation, quote=:quote, dateOfAccess=:dateOfAccess, titleOfWebsite=:titleOfWebsite
+                projectId=:projectId, formattedCitation=:formattedCitation, inTextCitation=:inTextCitation, quote=:quote, dateOfAccess=:dateOfAccess, titleOfWebsite=:titleOfWebsite,
+                linkOnline=:linkOnline, linkArchive=:linkArchive, linkLibrary=:linkLibrary
                 WHERE id=:id
             ');
 

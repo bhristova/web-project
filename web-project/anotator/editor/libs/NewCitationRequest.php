@@ -42,6 +42,12 @@ class NewCitationRequest {
 
     private string $formattedCitation;
 
+    private string $linkOnline;
+
+    private string $linkArchive;
+
+    private string $linkLibrary;
+
     public function __construct(array $projectData) {
 
         $this->id = isset($projectData['id']) ? $projectData['id'] : uniqid();
@@ -64,6 +70,9 @@ class NewCitationRequest {
         $this->titleOfWebsite = isset($projectData['titleOfWebsite']) ? $projectData['titleOfWebsite'] : '';
         $this->inTextCitation = isset($projectData['inTextCitation']) ? $projectData['inTextCitation'] : '';
         $this->formattedCitation = isset($projectData['formattedCitation']) ? $projectData['formattedCitation'] : '';
+        $this->linkOnline = isset($projectData['linkOnline']) ? $projectData['linkOnline'] : '';
+        $this->linkArchive = isset($projectData['linkArchive']) ? $projectData['linkArchive'] : '';
+        $this->linkLibrary = isset($projectData['linkLibrary']) ? $projectData['linkLibrary'] : '';
     }
 
     public function validate(): void {
@@ -136,6 +145,9 @@ class NewCitationRequest {
             'titleOfWebsite' => $this->titleOfWebsite,
             'inTextCitation' => $this->inTextCitation,
             'formattedCitation' => $this->formattedCitation,
+            'linkOnline' => $this->linkOnline,
+            'linkArchive' => $this->linkArchive,
+            'linkLibrary' => $this->linkLibrary,
         ];
     }
 }

@@ -40,8 +40,6 @@ class NewImportExportRequest {
         $this->validateNonEmpty('inTextCitation', $errors);
         $this->validateNonEmpty('formattedCitation', $errors);
 
-        $this->validateSourceType($errors);
-
         if ($errors) {
             throw new RequestValidationException($errors);
         }
@@ -65,16 +63,6 @@ class NewImportExportRequest {
             return $parts[$index];
         }
         return '';
-    }
-
-    private function validateSourceType(&$errors) {
-
-        $validSourceTypes = array('книга', 'линк', 'списание');
-        $sourceType = mb_strtolower($this->sourceType);
-        if (empty($sourceType) || !in_array($sourceType, $validSourceTypes)) {
-            $errors['sourceType'] = 'Supported sources are book, link and magazine';
-        }
-
     }
 
     private function validateNonEmpty($fieldName, &$errors) {

@@ -116,7 +116,6 @@ const showAddCitation = () => {
 document.getElementById('button-addCitation').addEventListener('click', () => showAddCitation());
 document.getElementById('button-backToProjects').addEventListener('click', () => backToAllProjects());
 document.getElementById('projectSaveButton').addEventListener('click', async () => await saveProject());
-document.getElementById('projectContent').addEventListener('ondrop', () => onDrop());
 
 (async () => {
     try {

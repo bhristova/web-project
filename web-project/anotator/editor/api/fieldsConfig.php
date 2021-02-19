@@ -38,8 +38,12 @@ switch ($_SERVER['REQUEST_METHOD']) {
         $addedCitationSource = $fieldsConfigController->addNewCitationSource($propertiesForCitationSources);
         $addedFieldConfig = $fieldsConfigController->addNewFieldConfig($propertiesForCitationTypes_CitationSources);
         
-        if(!$addedCitationSource || !$addedFieldConfig) {
-            echo json_encode(['success' => false, 'message' => 'Error when trying to save']);
+        if(!$addedCitationSource) {
+            echo json_encode(['success' => false, 'message' => 'Error 1']);
+            return;
+        }
+        if(!$addedFieldConfig) {
+            echo json_encode(['success' => false, 'message' => 'Error 2']);
             return;
         }
         

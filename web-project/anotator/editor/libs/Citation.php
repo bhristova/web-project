@@ -42,8 +42,16 @@ class Citation {
 
     private string $formattedCitation;
 
+    private string $linkOnline;
+
+    private string $linkArchive;
+
+    private string $linkLibrary;
+
+
     public function __construct(string $id, string $authorFirstName, string $authorLastName, string $source, string $containerTitle, string $otherContributors = '', string $version, string $number, string $page, string $publisher,
-         string $publicationDate, string $location = '', string $annotationType, string $sourceType, string $projectId, string $quote, string $dateOfAccess, string $titleOfWebsite, string $inTextCitation, string $formattedCitation) {
+         string $publicationDate, string $location = '', string $annotationType, string $sourceType, string $projectId, string $quote, string $dateOfAccess, string $titleOfWebsite, string $inTextCitation, string $formattedCitation,
+         string $linkOnline, string $linkArchive, string $linkLibrary) {
         $this->id = $this->trimValues($id);
         $this->authorFirstName = $this->trimValues($authorFirstName);
         $this->authorLastName = $this->trimValues($authorLastName);
@@ -64,6 +72,9 @@ class Citation {
         $this->titleOfWebsite = $this->trimValues($titleOfWebsite);
         $this->inTextCitation = !empty($this->trimValues($inTextCitation)) ? $this->trimValues($inTextCitation) : $this->constructInTextCitation();
         $this->formattedCitation = !empty($this->trimValues($formattedCitation)) ? $this->trimValues($formattedCitation) : $this->constructCitation();
+        $this->linkOnline = $this->trimValues($linkOnline);
+        $this->linkArchive = $this->trimValues($linkArchive);
+        $this->linkLibrary = $this->trimValues($linkLibrary);
     }
 
     private function trimValues($value): string {
@@ -376,7 +387,7 @@ class Citation {
 
     public function styleSource(): string {
         $source = $this->getSource();
-        if (!str_ends_with($source,'.') && !str_ends_with($source,' .')) {
+        if (!substr($source, -1) == '.') {
             $source .= '.';
         }
         $result = '';
@@ -495,12 +506,15 @@ class Citation {
             'titleOfWebsite' => $this->titleOfWebsite,
             'inTextCitation' => $this->inTextCitation,
             'formattedCitation' => $this->formattedCitation,
+            'linkOnline' => $this->linkOnline,
+            'linkArchive' => $this->linkArchive,
+            'linkLibrary' => $this->linkLibrary,
         ];
     }
 
     public static function createFromArray(array $projects): Citation {
         return new Citation($projects['id'], $projects['authorFirstName'], $projects['authorLastName'], $projects['source'], $projects['containerTitle'], $projects['otherContributors'], $projects['version'], $projects['number'], $projects['page'],
         $projects['publisher'], $projects['publicationDate'], $projects['location'], $projects['annotationType'], $projects['sourceType'], $projects['projectId'], $projects['quote'], $projects['dateOfAccess'], $projects['titleOfWebsite'], 
-        $projects['inTextCitation'], $projects['formattedCitation']);
+        $projects['inTextCitation'], $projects['formattedCitation'], $projects['linkOnline'], $projects['linkArchive'], $projects['linkLibrary']);
     }
 }

@@ -8,6 +8,7 @@ class NewFieldConfigRequest {
     private string $anotationTypeAPA;
     private string $anotationTypeMLA;
     private string $anotationTypeChicago;
+    private string $anotationTypeEdit;
 
     private string $config;
 
@@ -21,6 +22,7 @@ class NewFieldConfigRequest {
         $this->anotationTypeAPA = isset($fieldConfigData['anotationTypeAPA']) ? $fieldConfigData['anotationTypeAPA'] : '';
         $this->anotationTypeChicago = isset($fieldConfigData['anotationTypeChicago']) ? $fieldConfigData['anotationTypeChicago'] : '';
         $this->anotationTypeMLA = isset($fieldConfigData['anotationTypeMLA']) ? $fieldConfigData['anotationTypeMLA'] : '';
+        $this->anotationTypeEdit = isset($fieldConfigData['anotationTypeEdit']) ? $fieldConfigData['anotationTypeEdit'] : '';
 
         $this->config = $this->buildConfig($fieldConfigData);
 
@@ -59,7 +61,7 @@ class NewFieldConfigRequest {
     public function getPropertiesForCitationTypes_CitationSources(): array {
         $mainArray = [];
 
-        foreach ([$this->anotationTypeAPA, $this->anotationTypeChicago, $this->anotationTypeMLA] as $anotationType)
+        foreach ([$this->anotationTypeAPA, $this->anotationTypeChicago, $this->anotationTypeMLA, $this->anotationTypeEdit] as $anotationType)
         $mainArray[] = [
             'id1_L_citationType' => $anotationType,
             'id2_L_citationSource' => $this->sourceId,
@@ -70,7 +72,7 @@ class NewFieldConfigRequest {
     }
 
     private function buildConfig($fieldConfigData): string {
-        $skipKeys = ['sourceType', 'anotationTypeAPA', 'anotationTypeChicago', 'anotationTypeMLA', 'inTextCitation', 'bibliographyCitation'];
+        $skipKeys = ['sourceType', 'anotationTypeAPA', 'anotationTypeChicago', 'anotationTypeMLA', 'anotationTypeEdit', 'inTextCitation', 'bibliographyCitation'];
         $result = '[';
         $index = 0;
         foreach($fieldConfigData as $key => $item){

@@ -267,9 +267,8 @@ imageSummary.addEventListener('mouseout', () => imageSummary.setAttribute('src',
 imageSummary.addEventListener('click', () => onAllCitationsClick());
 
 const imageNewSource = document.getElementById('imageNewSource');
-imageNewSource.addEventListener('mouseover', () => imageNewSource.setAttribute('src', './files/project-existing-hover.png'));
-imageNewSource.addEventListener('mouseout', () => imageNewSource.setAttribute('src', './files/project-new.png'));
+imageNewSource.addEventListener('mouseover', () => imageNewSource.setAttribute('src', './files/template-new-hover.png'));
+imageNewSource.addEventListener('mouseout', () => imageNewSource.setAttribute('src', './files/template-new.png'));
 imageNewSource.addEventListener('click', () => onNewSource());
 
-// const buttonsForm = document.getElementById('newProject');
-// buttonsForm.addEventListener('submit', (evt) => addNewProject(evt))
+export {onAllProjects};

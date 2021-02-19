@@ -81,7 +81,6 @@ body {
 .mappingDiv {
     display: flex;
     padding: 2px 2px 2px 2px;
-    /* justify-content: space-between; */
 }
 
 .mappingDiv label {
