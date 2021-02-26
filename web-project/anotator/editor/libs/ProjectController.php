@@ -6,27 +6,39 @@ class ProjectController {
     public string $userId = 'cf8695c3-6e24-454a-b333-eb63c37ed7df'; //TODO: create login and add some sort of authentication, for example JWToken (if possible) and keep the userId there
 
     public function getAllProjects(): array {
-
         $projects = [];
         $userId = $this->userId;
+        try {
 
-        $query = (new Db())->getConnection()->query("SELECT id, name FROM `project` WHERE createdBy='$userId'") or die("failed!");
+            $connection = (new Db())->getConnection();
 
-        while ($project = $query->fetch()) {
-            $projects[] = $project;
+            $selectStatement = $connection->prepare("SELECT id, name FROM project WHERE createdBy=:userId");
+            $selectStatement->execute(array(':userId' => $userId));
+
+            $projects = $selectStatement->fetchAll();
+        } catch (PDOException $e) {
+            error_log($e->getMessage());
+            return $e->getMessage();
         }
         
         return $projects;
     }
 
     public function getProjectById(string $id): array {
-
         $projects = [];
         $userId = $this->userId;
 
-        $query = (new Db())->getConnection()->query("SELECT * FROM `project` WHERE id='$id' AND createdBy='$userId'") or die("failed!");
-        while ($project = $query->fetch()) {
-            $projects[] = $project;
+        try {
+
+            $connection = (new Db())->getConnection();
+
+            $selectStatement = $connection->prepare("SELECT * FROM `project` WHERE id=:id AND createdBy=:userId");
+            $selectStatement->execute(array(':userId' => $userId, ':id' => $id));
+
+            $projects = $selectStatement->fetchAll();
+        } catch (PDOException $e) {
+            error_log($e->getMessage());
+            return $e->getMessage();
         }
         
         return $projects;

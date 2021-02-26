@@ -28,9 +28,17 @@ class CitationsController {
             $citationIdsString = "'$citationIds'";
         }
 
-        $query = (new Db())->getConnection()->query("SELECT * FROM `citation` WHERE id IN ($citationIdsString) AND formattedCitation IS NOT NULL AND formattedCitation <> ''") or die("failed!");
-        while ($citation = $query->fetch()) {
-            $citations[] = $citation;
+        try {
+
+            $connection = (new Db())->getConnection();
+
+            $selectStatement = $connection->prepare("SELECT * FROM `citation` WHERE id IN (:citationIdsString) AND formattedCitation IS NOT NULL AND formattedCitation <> ''");
+            $selectStatement->execute(array(':citationIdsString' => $citationIdsString));
+
+            $citations = $selectStatement->fetchAll();
+        } catch (PDOException $e) {
+            error_log($e->getMessage());
+            return $e->getMessage();
         }
         
         return $citations;
@@ -40,11 +48,19 @@ class CitationsController {
 
         $citations = [];
 
-        $query = (new Db())->getConnection()->query("SELECT * FROM `citation` WHERE projectId='$projectId'") or die('failed!');
-        while ($citation = $query->fetch()) {
-            $citations[] = $citation;
+        try {
+
+            $connection = (new Db())->getConnection();
+
+            $selectStatement = $connection->prepare("SELECT * FROM `citation` WHERE projectId=:projectId");
+            $selectStatement->execute(array(':projectId' => $projectId));
+
+            $citations = $selectStatement->fetchAll();
+        } catch (PDOException $e) {
+            error_log($e->getMessage());
+            return $e->getMessage();
         }
-        
+
         return $citations;
     }
 

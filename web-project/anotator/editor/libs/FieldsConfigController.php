@@ -16,11 +16,17 @@ class FieldsConfigController {
 
     public function getCitationSourceByName($name): array {
         $configs = [];
-        
-        $query = (new Db())->getConnection()->query("SELECT * from l_citationsources WHERE name = '$name'") or die("failed!");
-            
-        while ($config = $query->fetch()) {
-            $configs[] = $config;
+
+        try {
+            $connection = (new Db())->getConnection();
+
+            $selectStatement = $connection->prepare("SELECT * from l_citationsources WHERE name = :name");
+            $selectStatement->execute(array(':name' => $name));
+
+            $configs = $selectStatement->fetchAll();
+        } catch (PDOException $e) {
+            error_log($e->getMessage());
+            return $e->getMessage();
         }
 
         return $configs;
@@ -28,16 +34,22 @@ class FieldsConfigController {
 
     public function getFieldConfigByName($name): array {
         $configs = [];
-        
-        $query = (new Db())->getConnection()->query("SELECT lclc.config, lc.name as CitationType, lcs.name as SourceName FROM `l_citationtypes_l_citationsources`  lclc
+
+        try {
+            $connection = (new Db())->getConnection();
+
+            $selectStatement = $connection->prepare("SELECT lclc.config, lc.name as CitationType, lcs.name as SourceName FROM `l_citationtypes_l_citationsources`  lclc
             INNER JOIN `l_citationtypes` lc on  lclc.id1_L_citationType = lc.id
             INNER JOIN `l_citationsources` lcs on  lclc.id2_L_citationSource = lcs.id
-            WHERE lc.name = '$name'") or die("failed!");
-            
-        while ($config = $query->fetch()) {
-            $configs[] = $config;
-        }
+            WHERE lc.name = :name");
+            $selectStatement->execute(array(':name' => $name));
 
+            $configs = $selectStatement->fetchAll();
+        } catch (PDOException $e) {
+            error_log($e->getMessage());
+            return $e->getMessage();
+        }
+        
         return $configs;
     }
 
