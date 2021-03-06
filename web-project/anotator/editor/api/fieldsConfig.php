@@ -12,9 +12,10 @@ switch ($_SERVER['REQUEST_METHOD']) {
     
     case 'GET': {
         $name = $_REQUEST['name'] ?? null;
+        $source = $_REQUEST['source'] ?? null;
 
         if(!empty($name)) {
-            echo json_encode($fieldsConfigController->getFieldConfigByName($name), JSON_UNESCAPED_UNICODE);
+            echo json_encode($fieldsConfigController->getFieldConfigByName($name, $source), JSON_UNESCAPED_UNICODE);
         } else {
             echo json_encode($fieldsConfigController->getAllFieldConfigs(), JSON_UNESCAPED_UNICODE);
         }

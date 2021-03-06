@@ -77,7 +77,7 @@ const onImportCitationsClick = (annotationType) => {
     createImportHelpElement(projectId, annotationType);
 };
 
-const onNewCitationClick = async (annotationType, data) => {
+const onNewCitationClick = async (annotationType, citationSource, data) => {
     const divNewCitation = document.getElementById('div-newCitation');
 
     if( divNewCitation.style.height === '80%') {
@@ -91,7 +91,7 @@ const onNewCitationClick = async (annotationType, data) => {
     
     divNewCitation.style.height = '80%';
 
-    await newCitation(annotationType, projectId, data? data[0] : null);
+    await newCitation(annotationType, projectId, citationSource, data? data[0] : null);
 };
 
 const removeElement = (source, elementId) => {

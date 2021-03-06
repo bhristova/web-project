@@ -32,17 +32,25 @@ class FieldsConfigController {
         return $configs;
     }
 
-    public function getFieldConfigByName($name): array {
+    public function getFieldConfigByName($name, $source): array {
         $configs = [];
 
         try {
             $connection = (new Db())->getConnection();
 
-            $selectStatement = $connection->prepare("SELECT lclc.config, lc.name as CitationType, lcs.name as SourceName FROM `l_citationtypes_l_citationsources`  lclc
-            INNER JOIN `l_citationtypes` lc on  lclc.id1_L_citationType = lc.id
-            INNER JOIN `l_citationsources` lcs on  lclc.id2_L_citationSource = lcs.id
-            WHERE lc.name = :name");
-            $selectStatement->execute(array(':name' => $name));
+            if(!is_null($source)) {
+                $selectStatement = $connection->prepare("SELECT lclc.config, lc.name as CitationType, lcs.name as SourceName FROM `l_citationtypes_l_citationsources`  lclc
+                INNER JOIN `l_citationtypes` lc on  lclc.id1_L_citationType = lc.id
+                INNER JOIN `l_citationsources` lcs on  lclc.id2_L_citationSource = lcs.id
+                WHERE lc.name = :name AND lcs.name = :source");
+                $selectStatement->execute(array(':name' => $name, ':source' => $source));
+            } else {
+                $selectStatement = $connection->prepare("SELECT lclc.config, lc.name as CitationType, lcs.name as SourceName FROM `l_citationtypes_l_citationsources`  lclc
+                INNER JOIN `l_citationtypes` lc on  lclc.id1_L_citationType = lc.id
+                INNER JOIN `l_citationsources` lcs on  lclc.id2_L_citationSource = lcs.id
+                WHERE lc.name = :name");
+                $selectStatement->execute(array(':name' => $name));
+            }
 
             $configs = $selectStatement->fetchAll();
         } catch (PDOException $e) {

@@ -81,6 +81,8 @@ const addCitationToTable = (citation) => {
         ]
     };
 
+    const citationType = citation.annotationType || 'existingCitation';
+    const citationSource = citation.sourceType;
     const editButtonData = {
         tagName: 'button',
         attributes: [
@@ -91,7 +93,7 @@ const addCitationToTable = (citation) => {
             {name: 'innerHTML', value: 'Редактирай'}
         ],
         eventListeners: [
-            {event: 'click', listener: (evt) => onEditClick(evt, citation.id)}
+            {event: 'click', listener: (evt) => onEditClick(evt, citationSource, citationType, citation.id)}
         ]
     };
 
@@ -176,9 +178,9 @@ const onDeleteClick = async (evt) => {
     }
 };
 
-const onEditClick = async (evt, citationId) => {
+const onEditClick = async (evt, citationSource, citationType, citationId) => {
     const citationData = await getCitationById(citationId);
-    onNewCitationClick('existingCitation', citationData);
+    onNewCitationClick(citationType, citationSource, citationData);
 }
 
 const onDragEnd = (evt) => {

@@ -5,29 +5,31 @@ const errorsData = [
     'Неуспешно запазване!',
     'Моля качете валиден файл!',
     'Файлът не беше качен успешно!',
-    'Грешка при генериране на файл!'
+    'Грешка при генериране на файл!',
+    'Невалиден тип на анотацията!'
 ]
 
 const parseMessage = (message) => {
     const errors = [];
     const getErrors = (val) => {
         if(val === 'Field should not be empty' && !errors.includes(errorsData[0])) {
-            errors.push(errorsData[0])
+            errors.push(errorsData[0]);
         }
         if(val === 'Error when trying to save' && !errors.includes(errorsData[1])) {
-            errors.push(errorsData[1])
+            errors.push(errorsData[1]);
         }
         if(val === 'Error when trying to import citations' && !errors.includes(errorsData[2])) {
-            errors.push(errorsData[2])
+            errors.push(errorsData[2]);
         }
         if(val === 'File is not uploaded' && !errors.includes(errorsData[3])) {
-            errors.push(errorsData[3])
+            errors.push(errorsData[3]);
         }
         if(val === 'Error when trying to export citations' && !errors.includes(errorsData[4])) {
-            errors.push(errorsData[4])
+            errors.push(errorsData[4]);
         }
-        
-        
+        if(val === 'Ivalid annotation type!' && !errors.includes(errorsData[4])) {
+            errors.push(errorsData[5]);
+        }
     }
 
     if (typeof message === 'string') {

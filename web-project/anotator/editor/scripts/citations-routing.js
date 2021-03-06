@@ -1,6 +1,7 @@
 import citation from './citations-new.js';
 import table from './citations-table.js';
 import {getFieldConfig} from './api.js';
+import errorMessage from './error-message.js';
 
 const allowedTypesCitations = ['apa', 'mla', 'chicago', 'existingCitation'];
 
@@ -10,13 +11,9 @@ const citationCitationTypesMapping = {
     chicago: ['Парафразиране', 'Цитат'],
 }
 
-const tableColumnsMapping = {
-    mla: ['Вид на източника', 'Цитирана работа', 'Цитат'],
-    apa: ['Вид на източника', 'Цитирана работа', 'Цитат'],
-    chicago: ['Вид на източника', 'Цитирана работа', 'Цитат', 'Бележка под линия'],
-}
+const tableColumnsMapping = ['Вид на източника', 'Цитирана работа', 'Цитат', 'Формат в библиография'];
 
-const newCitation = async (type, projectId, data) => {
+const newCitation = async (type, projectId, citationSource, data) => {
     const annType = data && !! data.annotationType ? data.annotationType : type;
     const citationType = allowedTypesCitations.find(allowedType => allowedType.toLowerCase() === annType.toLowerCase());
     
@@ -26,10 +23,15 @@ const newCitation = async (type, projectId, data) => {
 
     let citationFields = [], result = [];
     try {
-        result = await getFieldConfig(citationType);
+        result = await getFieldConfig(citationType, citationSource);
+        if(!result || result.length === 0) {
+            errorMessage();
+            return;
+        }
         citationFields = JSON.parse(result[0].config);
     } catch (err) {
-        debugger
+        errorMessage(err);
+        return;
     }
 
     const citationSourceTypes = data ? [data.sourceType] : result.map(elem => elem.SourceName).sort();
@@ -38,15 +40,14 @@ const newCitation = async (type, projectId, data) => {
 }
 
 const newTable = (type, projectId) => {
-    const citationType = allowedTypesCitations.find(allowedType => allowedType === type.toLowerCase());
+    const citationType = allowedTypesCitations.find(allowedType => allowedType.toLowerCase() === type.toLowerCase());
     
     if(!citationType) {
+        errorMessage("Ivalid annotation type!");
         return;
-        //maybe error?
     }
 
-    const tableColumns = tableColumnsMapping[citationType];
-    table(tableColumns, projectId);
+    table(tableColumnsMapping, projectId);
 }
 
 export {newCitation, newTable};

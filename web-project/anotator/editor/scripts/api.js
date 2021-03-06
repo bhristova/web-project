@@ -95,8 +95,13 @@ const deleteCitation = async (id) => {
     return response.text();
 };
 
-const getFieldConfig = async (name) => {
-    const response = await fetch(`${apiRoute}fieldsConfig.php?name=${name}`, {
+const getFieldConfig = async (name, source) => {
+    let url = `${apiRoute}fieldsConfig.php?name=${name}`;
+    if (source) {
+        url = `${url}&source=${source}`
+    }
+
+    const response = await fetch(url, {
         method: 'GET',
     });
     

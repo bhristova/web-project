@@ -108,49 +108,49 @@ class Citation {
         switch (mb_strtolower($this->getSourceType())) {
             case 'книга':
                 {
-                    $result .= $this->getAuthorFirstName();
-                    $result .= (empty($result) ? '' : ' ') . $this->getAuthorLastName();
+                    $result .= !empty($this->getAuthorFirstName()) ? $this->getAuthorFirstName() : '';
+                    $result .= (empty($result) ? '' : ' ') . !empty($this->getAuthorLastName()) ? $this->getAuthorLastName() : '';
 
                     if(!empty($result)) {
                         $result .= ', ';
                     }
 
-                    $result .= '"<i>' . $this->getSource() . '</i>." (';
-                    $result .= $this->getLocation() . ': ';
-                    $result .= $this->getPublisher() . ', ';
-                    $result .= $this->getPublicationDate();
+                    $result .= !empty($this->getSource()) ? '"<i>' . $this->getSource() . '</i>." (' : '';
+                    $result .= !empty($this->getLocation()) ? $this->getLocation() . ': ' : '';
+                    $result .= !empty($this->getPublisher()) ? $this->getPublisher() . ', ' : '';
+                    $result .= !empty($this->getPublicationDate()) ? $this->getPublicationDate() : '';
                     $result .= ')';
-                    $result .= empty($this->getPage()) ? '.' : ' ' . $this->getPage() . '.';
+                    $result .= !empty($this->getPage()) ? ' ' . $this->getPage() . '.' : '.';
                 }
                 break;
             case 'линк':
                 {
-                    $result .= $this->getAuthorFirstName();
-                    $result .= (empty($result) ? '' : ' ') . $this->getAuthorLastName();
+                    $result .= !empty($this->getAuthorFirstName()) ? $this->getAuthorFirstName() : '';
+                    $result .= (empty($result) ? '' : ' ') . !empty($this->getAuthorLastName()) ? $this->getAuthorLastName() : '';
 
                     if(!empty($result)) {
                         $result .= ', ';
                     }
 
-                    $result .= '"' . $this->getSource() . '." ';
-                    $result .= $this->getTitleOfWebsite() . '. ';
+                    $result .= !empty($this->getSource()) ? '"' . $this->getSource() . '."' : '';
+                    $result .= !empty($this->getTitleOfWebsite()) ? $this->getTitleOfWebsite() . '. ' : '';
                     $result .= !empty($this->getPublicationDate()) ? $this->getPublicationDate() . '. ' : $this->getDateOfAccess() . '. ';
-                    $result .= $this->getLocation() . '. ';
+                    $result .= !empty($this->getLocation()) ? $this->getLocation() . '. ' : '';
                 }
                 break;
             case 'списание':
                 {
-                    $result .= $this->getAuthorFirstName();
-                    $result .= (empty($result) ? '' : ' ') . $this->getAuthorLastName();
+                    $result .= !empty($this->getAuthorFirstName()) ? $this->getAuthorFirstName() : '';
+                    $result .= (empty($result) ? '' : ' ') . !empty($this->getAuthorLastName()) ? $this->getAuthorLastName() : '';
 
                     if(!empty($result)) {
                         $result .= ', ';
                     }
 
-                    $result .= '"' . $this->getSource() . '." ';
-                    $result .= '<i>' . $this->getContainerTitle() . '</i>, ';
-                    $result .= $this->getPublicationDate() . '.';
-                    $result .= empty($this->getPage()) ? '.' : $this->getPage() . '.';
+                    $result .= !empty($this->getSource()) ? '"' . $this->getSource() . '."' : '';
+                    $result .= !empty($this->getContainerTitle()) ? '<i>' . $this->getContainerTitle() . '</i>, ' : '';
+                    $result .= !empty($this->getPublicationDate()) ? $this->getPublicationDate() . '. ' : '';
+                    $result .= !empty($this->getPage()) ? ' ' . $this->getPage() . '.' : '.';
                 }
                 break;
         }
@@ -264,40 +264,30 @@ class Citation {
                         $result .= ', ';
                     }
 
-                    $result .= $this->getAuthorFirstName() . '. ';
-                    $result .= '<i>' . $this->getSource() . '</i>. ';
-                    $result .= $this->getLocation() . ': ';
-                    $result .= $this->getPublisher() . ', ';
-                    $result .= $this->getPublicationDate();
+                    $result .= !empty($this->getAuthorLastName()) ? $this->getAuthorLastName() . ', ' : '';
+                    $result .= !empty($this->getSource()) ? '<i>' . $this->getSource() . '</i>.' : '';
+                    $result .= !empty($this->getLocation()) ? $this->getLocation() : '';
+                    $result .= !empty($this->getPublisher()) ? $this->getPublisher() . ', ' : '';
+                    $result .= !empty($this->getPublicationDate()) ? $this->getPublicationDate() : '';
                 }
                 break;
             case 'линк':
                 {
-                    $result .= $this->getAuthorLastName();
-
-                    if(!empty($result)) {
-                        $result .= ', ';
-                    }
-
-                    $result .= $this->getAuthorFirstName() . '. ';
-                    $result .= '"' . $this->getSource() . '." ';
-                    $result .= $this->getTitleOfWebsite() . '. ';
-                    $result .= !empty($this->getPublicationDate()) ? $this->getPublicationDate() . '. ' : $this->getDateOfAccess() . '. ';
-                    $result .= $this->getLocation() . '. ';
+                    $result .= !empty($this->getAuthorLastName()) ? $this->getAuthorLastName() . ', ' : '';
+                    $result .= !empty($this->getAuthorFirstName()) ? $this->getAuthorFirstName() . '. ' : '';
+                    $result .= !empty($this->getSource()) ? '"' . $this->getSource() . '"' : '';
+                    $result .= !empty($this->getTitleOfWebsite()) ? $this->getTitleOfWebsite() . '. ' : '';
+                    $result .= !empty($this->getPublicationDate()) ? $this->getPublicationDate() . '. ' : (!empty($this->getDateOfAccess()) ? $this->getDateOfAccess() . '. ' : '');
+                    $result .= !empty($this->getLocation()) ? $this->getLocation() . '. ' : '';
                 }
-                    break;
+                break;
             case 'списание':
                 {
-                    $result .= $this->getAuthorLastName();
-
-                    if(!empty($result)) {
-                        $result .= ', ';
-                    }
-
-                    $result .= $this->getAuthorFirstName() . '. ';
-                    $result .= '"' . $this->getSource() . '." ';
-                    $result .= '<i>' . $this->getContainerTitle() . '</i>, ';
-                    $result .= $this->getPublicationDate() . '.';
+                    $result .= !empty($this->getAuthorLastName()) ? $this->getAuthorLastName() . ', ' : '';
+                    $result .= !empty($this->getAuthorFirstName()) ? $this->getAuthorFirstName() . '. ' : '';
+                    $result .= !empty($this->getSource()) ? '"' . $this->getSource() . '."' : '';
+                    $result .= !empty($this->getContainerTitle()) ? '<i>' . $this->getContainerTitle() . '</i>,' : '';
+                    $result .= !empty($this->getPublicationDate()) ? $this->getPublicationDate() . '.' : '';
                     break;
                 }
                 break;
@@ -307,7 +297,7 @@ class Citation {
 
     private function constructApaCitation(): string {
         $result = '';
-        $result .= empty($this->getAuthorLastName()) ? '' : $this->getAuthorLastName();
+        $result .= !empty($this->getAuthorLastName()) ? $this->getAuthorLastName() : '';
 
         if(!empty($this->getAuthorFirstName())) {
             $names = explode(" ", $this->getAuthorFirstName());
@@ -317,13 +307,8 @@ class Citation {
             }
         }
 
-        if(!empty($this->getPublicationDate())) {
-            $result .= '(' . $this->getPublicationDate() . '). ';
-        }
-
-        if(!empty($this->getSource())) {
-            $result .= '<i>' . $this->getSource() . '</i>';
-        }
+        $result .= !empty($this->getPublicationDate()) ? '(' . $this->getPublicationDate() . '). ' : '';
+        $result .= !empty($this->getSource()) ? '<i>' . $this->getSource() . '</i>' : '';
 
         $edition = $this->getVersion();
         $volume = $this->getNumber();
@@ -354,25 +339,17 @@ class Citation {
 
     private function constructMlaCitation(): string {
         $result = '';
-        $result .= empty($this->getAuthorLastName()) ? '' : $this->getAuthorLastName() . ', ';
-        
-        $result .= empty($this->getAuthorFirstName()) ? '' : $this->getAuthorFirstName() . '.';
 
-        $result .= $this->styleSource();
-
-        $result .= empty($this->getContainerTitle()) ? '' : '<i>' . $this->getContainerTitle() . '</i>, ';
-
-        $result .= empty($this->getOtherContributors()) ? '' : $this->getOtherContributors() . ', ';
-
-        $result .= empty($this->getVersion()) ? '' : $this->getVersion() . ', ';
-
-        $result .= empty($this->getNumber()) ? '' : $this->getNumber() . ', ';
-
-        $result .= empty($this->getPublisher()) ? '' : $this->getPublisher() . ', ';
-
-        $result .= empty($this->getPublicationDate()) ? '' : $this->getPublicationDate() . ', ';
-
-        $result .= empty($this->getLocation()) ? '' : $this->getLocation() . ', ';
+        $result .= !empty($this->getAuthorLastName()) ? $this->getAuthorLastName() . ', ' : '';
+        $result .= !empty($this->getAuthorFirstName()) ? $this->getAuthorFirstName() . '.' : '';
+        $result .= !empty($this->styleSource()) ? $this->styleSource(): '';
+        $result .= !empty($this->getContainerTitle()) ? '<i>' . $this->getContainerTitle() . '</i>, ' : '';
+        $result .= !empty($this->getOtherContributors()) ? $this->getOtherContributors() . ', ' : '';
+        $result .= !empty($this->getVersion()) ? $this->getVersion() . ', ' : '';
+        $result .= !empty($this->getNumber()) ? $this->getNumber() . ', ' : '';
+        $result .= !empty($this->getPublisher()) ? $this->getPublisher() . ', ' : '';
+        $result .= !empty($this->getPublicationDate()) ? $this->getPublicationDate() . ', ' : '';
+        $result .= !empty($this->getLocation()) ? $this->getLocation() . ', ' : '';
 
         if (substr($result, -2) == ', ') {
             $result = substr($result, 0, mb_strlen($result) - 2) . '.';

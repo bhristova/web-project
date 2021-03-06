@@ -25,7 +25,7 @@ class CitationsController {
             $citationIds = array_map($func, $citationIds);
             $citationIdsString = implode(',', $citationIds);
         } else {
-            $citationIdsString = "'$citationIds'";
+            $citationIdsString = $citationIds;
         }
 
         try {
